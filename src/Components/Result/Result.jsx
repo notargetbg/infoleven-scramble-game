@@ -10,7 +10,7 @@ class Result extends Component {
 			55
 		</p>
 		<p>
-			<Button bsStyle="primary">Try again ?</Button>
+			<Button bsStyle="default">Try again ?</Button>
 		</p>
 		</Jumbotron>
 	);
