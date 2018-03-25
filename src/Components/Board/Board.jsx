@@ -11,34 +11,47 @@ class Board extends Component {
 			userInput: null,
 			answers: [],
 			scrambledWords: [],
+			wordsData: words,
+			correctAnswers: []
 		};
 	}
 
 	startGame = () => {
-		const firstScrambledWord = shuffle(words[0])
+		const firstScrambledWord = shuffle(words[0]);
 		
 		this.setState({
 			hasGameStarted: true,
-			scrambledWords: [...this.state.scrambledWords, firstScrambledWord]
+			scrambledWords: [firstScrambledWord],
+			correctAnswers: [],
+			answers: []
 		});
 		setTimeout(() => {
+			const correctAnswers = this.calculateScore();
+			this.setState({
+				correctAnswers
+			});
 
-			console.log(this.state)
-			console.log('ended');
-
-		}, 1000 * 5)
+		}, 1000 * 10);
 	}
 
-	giveAnswer = (e) => {
-		e.preventDefault();				
+	saveAnswer = (e) => {
+		e.preventDefault();
+		const { answers, wordsData } = this.state;
 
-		const newScrambledWord = shuffle(words[this.state.scrambledWords.length]);
-
-		this.setState({
-			answers: [...this.state.answers, this.inputEl.value],
-			scrambledWords: [...this.state.scrambledWords, newScrambledWord]
-		});
+		if (answers.length >= wordsData.length) {
+			return;
+		}
+		
+		this.setState({answers: [...this.state.answers, this.inputEl.value]});
 		this.inputEl.value = "";
+
+
+		if (this.state.scrambledWords.length === 0 || !wordsData[this.state.scrambledWords.length]) {
+			return;
+		}
+
+		const newScrambledWord = shuffle(wordsData[this.state.scrambledWords.length]);
+		this.setState({scrambledWords: [...this.state.scrambledWords, newScrambledWord]});
 	}
 
 	updateInput = (e) => {
@@ -47,22 +60,35 @@ class Board extends Component {
         });
 	}
 
-	render() {
+	calculateScore = () => {
+		return this.state.wordsData.filter((scrambledWord, index) => {
+			return scrambledWord === this.state.answers[index];
+		});
+	}
+
+	render() {		
+		const lastScrambledWord = this.state.scrambledWords[this.state.scrambledWords.length - 1];
+
 		return (
 			<div className="board">
-				{this.state.scrambledWords && this.state.scrambledWords.length > 0 &&
-					this.state.scrambledWords.map((word) => (
-						<p>
-							{word}
-						</p>
-					))}
+				{lastScrambledWord &&
+					<p>
+						{lastScrambledWord}
+					</p>
+				}
 
-				<form onSubmit={this.giveAnswer}>
+				<form onSubmit={this.saveAnswer}>
 					<FormGroup bsSize="large">
 						<FormControl type="text" inputRef={(e) => {this.inputEl = e;}} placeholder="Enter an answer" onChange={this.updateInput} />
 						<Button bsStyle="primary" onClick={this.startGame}>Start game</Button>
-					</FormGroup>
+					</FormGroup>					
 				</form>
+
+				<h3>Your score:
+					<small>
+						{this.state.correctAnswers.length * 5}
+					</small>
+				</h3>
 			</div>
 		);
 	}

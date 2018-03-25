@@ -12,7 +12,7 @@ class ScrambleGame extends Component {
 					<PageHeader>
 						Scramble Game
 					</PageHeader>
-					<Row className="show-grid">
+					<Row>
 						<Col xs={12} md={8}>
 							<Board />
 						</Col>
