@@ -1,97 +1,61 @@
 import React, { Component } from 'react';
 import { shuffle } from '../../Data/Helpers';
+import { connect } from 'react-redux';
+import * as actions from '../../Store/actions';
 import { words } from '../../Data/words';
-import { FormControl, FormGroup, Button } from 'react-bootstrap';
+import randomWords from 'random-words';
 
+import BoardHeader from './BoardHeader';
+import BoardInput from './BoardInput';
+
+console.log(randomWords({ exactly: 120 }));
 class Board extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			hasGameStarted: false,
-			userInput: null,
-			answers: [],
-			scrambledWords: [],
-			wordsData: words,
-			correctAnswers: []
+			scrambledWords: []
 		};
 	}
 
 	startGame = () => {
-		const firstScrambledWord = shuffle(words[0]);
-		
 		this.setState({
 			hasGameStarted: true,
-			scrambledWords: [firstScrambledWord],
-			correctAnswers: [],
-			answers: []
+			scrambledWords: words.map((word) => shuffle(word))
 		});
-		setTimeout(() => {
-			const correctAnswers = this.calculateScore();
-			this.setState({
-				correctAnswers
-			});
-
-		}, 1000 * 10);
+		this.props.dispatch(actions.resetGame());
+		this.gameTimeout();
 	}
 
-	saveAnswer = (e) => {
-		e.preventDefault();
-		const { answers, wordsData } = this.state;
-
-		if (answers.length >= wordsData.length) {
-			return;
-		}
-		
-		this.setState({answers: [...this.state.answers, this.inputEl.value]});
-		this.inputEl.value = "";
-
-
-		if (this.state.scrambledWords.length === 0 || !wordsData[this.state.scrambledWords.length]) {
-			return;
-		}
-
-		const newScrambledWord = shuffle(wordsData[this.state.scrambledWords.length]);
-		this.setState({scrambledWords: [...this.state.scrambledWords, newScrambledWord]});
-	}
-
-	updateInput = (e) => {
-        this.setState({
-            userInput: e.target.value
-        });
-	}
+	gameTimeout = () => setTimeout(() => {
+		this.setState({
+			hasGameStarted: false,
+			scrambledWords: []
+		});
+		this.props.dispatch(actions.saveResult(this.calculateScore()));
+	}, 1000 * 10);
 
 	calculateScore = () => {
-		return this.state.wordsData.filter((scrambledWord, index) => {
-			return scrambledWord === this.state.answers[index];
+		const correctAnswers = words.filter((correctWord, index) => {
+			return correctWord === this.props.answers[index];
 		});
+		return correctAnswers.length * 5;
 	}
 
-	render() {		
-		const lastScrambledWord = this.state.scrambledWords[this.state.scrambledWords.length - 1];
-
+	render() {
 		return (
 			<div className="board">
-				{lastScrambledWord &&
-					<p>
-						{lastScrambledWord}
-					</p>
-				}
-
-				<form onSubmit={this.saveAnswer}>
-					<FormGroup bsSize="large">
-						<FormControl type="text" inputRef={(e) => {this.inputEl = e;}} placeholder="Enter an answer" onChange={this.updateInput} />
-						<Button bsStyle="primary" onClick={this.startGame}>Start game</Button>
-					</FormGroup>					
-				</form>
-
-				<h3>Your score:
-					<small>
-						{this.state.correctAnswers.length * 5}
-					</small>
-				</h3>
+				<BoardHeader scrambledWords={this.state.scrambledWords} />
+				<BoardInput startGameFn={this.startGame} wordsData={words} hasGameStarted={this.state.hasGameStarted} />				
 			</div>
 		);
 	}
-}
+};
 
-export default Board;
+const mapStateToProps = (state) => {
+    return { 
+		answers: state.game.answers
+    }
+};
+
+export default connect(mapStateToProps)(Board);
