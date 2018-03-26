@@ -10,7 +10,7 @@ class ScrambleGame extends Component {
 			<div className="game-container">
 				<Grid>
 					<PageHeader>
-						Scramble Game
+						Scramble Game using <mark>React.js/Redux</mark>
 					</PageHeader>
 					<Row>
 						<Col xs={12} md={8}>

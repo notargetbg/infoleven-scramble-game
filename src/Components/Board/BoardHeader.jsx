@@ -1,34 +1,34 @@
 import React from 'react';
 
-const BoardHeader = ({scrambledWords}) => {
-
-    if(!scrambledWords) {
-        return null;
-    }
-
-    const currentScrambledWord = scrambledWords.splice(0, 1);
-
+const BoardHeader = ({scrambledWords, answers}) => {
     return (
-        <div className="board-header">        
-            <em>Instructions: </em>
+        <div className="board-header">
+            <p>
+                <strong><em>Instructions: </em></strong>
+            </p>
             <ol>
                 <li>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Guess as many words as possible for the time limit of 40 seconds
                 </li>
                 <li>
-                    Libero exercitationem rerum amet accusamus illo laudantium nisi ratione molestias deleniti tempore.
+                    Every word awards you <strong>5</strong> points
+                </li>               
+                <li>
+                    Enter the guessed word inside the input field and press <kbd>Enter &#9166;</kbd> to submit your answer
                 </li>
                 <li>
-                    Laborum blanditiis labore nesciunt eveniet temporibus, facilis sequi accusantium. Earum!
+                    Click on start new game and a <em>scrambled</em> word will appear as well as an <code>&lt;input /&gt;</code>
                 </li>
             </ol>
             <p>
-                Good luck!
+                <strong>
+                    Good luck!
+                </strong>
             </p>
-            {currentScrambledWord &&
-                <h4>
-                    {currentScrambledWord}
-                </h4>
+            {scrambledWords && answers &&
+                <h2 className="scrambled-word">
+                    {scrambledWords[answers.length]}
+                </h2>
             }
         </div>
     );

@@ -8,13 +8,8 @@ const ScoreBoard = ({players}) => {
             <h4 className="text-warning">There are no top players yet!</h4>
         )
     }
-    
-    if(players) {
-        console.log(players);
-    }
 
     return (
-
         <div>
             <h4 className="text-info">Top players:</h4>
             <ListGroup>

@@ -7,3 +7,10 @@ export const sortByScore = (users) => {
         return a.score < b.score;
     });
 }
+
+export const calculateScore = (words, answers) => {
+    const correctAnswers = words.filter((correctWord, index) => {
+        return correctWord === answers[index];
+    });
+    return correctAnswers.length * 5;
+}

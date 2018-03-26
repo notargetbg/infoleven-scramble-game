@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../Store/actions';
-import { FormControl, FormGroup, Button } from 'react-bootstrap';
+import { FormControl, FormGroup } from 'react-bootstrap';
 
 class BoardHeader extends Component {
-
     updateInput = (e) => {
         this.setState({
             userInput: e.target.value
@@ -13,7 +12,7 @@ class BoardHeader extends Component {
 
     saveAnswer = (e) => {
 		e.preventDefault();
-		const { answers, wordsData } = this.props;
+        const { answers, wordsData } = this.props;
 
 		if (answers.length >= wordsData.length) {
 			return;
@@ -23,19 +22,16 @@ class BoardHeader extends Component {
 		this.inputEl.value = "";
     }
 
-	render() {   
-        const { startGameFn, hasGameStarted } = this.props;
+	render() {        
+        if (!this.props.hasGameStarted) {
+            return null;
+        }
 
 		return (
-			<form onSubmit={this.saveAnswer}>
-                {hasGameStarted &&
-                    <FormGroup bsSize="large">
-                        <FormControl type="text" inputRef={(e) => {this.inputEl = e;}} placeholder="Enter an answer" onChange={this.updateInput} />
-                    </FormGroup>			
-                }		
-                {!hasGameStarted &&
-                    <Button bsStyle="primary" onClick={startGameFn}>Start new game</Button>
-                }
+			<form onSubmit={this.saveAnswer}>               
+                <FormGroup bsSize="large">
+                    <FormControl type="text" inputRef={(e) => {this.inputEl = e;}} placeholder="Enter an answer" onChange={this.updateInput} />
+                </FormGroup>
             </form>
 		);
 	}
@@ -43,7 +39,7 @@ class BoardHeader extends Component {
 
 const mapStateToProps = (state) => {
     return { 
-        answers: state.game.answers
+		answers: state.game.answers
     }
 };
 
