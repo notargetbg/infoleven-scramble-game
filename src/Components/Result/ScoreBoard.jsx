@@ -10,12 +10,12 @@ const ScoreBoard = ({players}) => {
     }
 
     return (
-        <div>
+        <div className="results-scoreboard">
             <h4 className="text-info">Top players:</h4>
             <ListGroup>
                 {sortByScore(players).map((player) => (
-                    <ListGroupItem key={player.id}>
-                        {player.name} - {player.score}
+                    <ListGroupItem key={player.id} className="result-item">
+                        {player.name} - <big>{player.score}</big>
                     </ListGroupItem>
                 ))}
             </ListGroup>

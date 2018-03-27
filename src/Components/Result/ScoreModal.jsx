@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Modal, Button, FormControl, FormGroup } from 'react-bootstrap';
+import happyIcon from '../assets/happy-icon.png';
+import sadIcon from '../assets/sad-icon.png';
 import * as actions from '../../Store/actions';
 
 class ScoreModal extends React.Component {
@@ -25,27 +27,44 @@ class ScoreModal extends React.Component {
         return (
             <Modal show={this.props.shouldShow} onHide={this.handleClose}>
                 <Modal.Header closeButton>
-                    {this.props.result &&
+                    {result > 0 &&
                         <Modal.Title>
-                            Your result: <big>{result}</big>
+                            Your result: <big className="text-success">{result}</big>
+                        </Modal.Title>
+                    }
+                    {result === 0 &&
+                        <Modal.Title>
+                            Sorry, you didn't guess any word
                         </Modal.Title>
                     }
                 </Modal.Header>
     
                 <Modal.Body>
-                    <form onSubmit={this.saveUser}>                        
-                        <FormGroup bsSize="small">							
-                            <FormControl type="text" inputRef={(e) => {this.inputEl = e;}} placeholder="Enter your name"/>
-                        </FormGroup>                        
-                    </form>
-                    {result >= 25 &&
-                        <p>
-                            You did great! If you wish you can save your score on the leaderboard.
-                        </p>
+                    {result > 0 &&
+                        <form onSubmit={this.saveUser}>                        
+                            <FormGroup bsSize="small">							
+                                <FormControl type="text" inputRef={(e) => {this.inputEl = e;}} placeholder="Enter your name"/>
+                            </FormGroup>                        
+                        </form>
+                    }
+                    {result >= 25 &&                        
+                        <div className="text-center">
+                            <p>
+                                You did great! If you wish you can save your score on the leaderboard.
+                            </p>
+                            <img src={happyIcon} alt="Feelin' happy!"/>
+                        </div>
+                    }
+                    {result === 0 &&
+                        <div className="text-center">
+                            <img src={sadIcon} alt="Feelin' happy!"/>
+                        </div>
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button bsStyle="success" type="submit" onClick={this.saveUser}>Save score</Button>
+                    {result > 0 &&
+                        <Button bsStyle="success" type="submit" onClick={this.saveUser}>Save score</Button>
+                    }
                     <Button bsSize="sm" onClick={this.restartGame} >Play again?</Button>
                 </Modal.Footer>            
             </Modal>

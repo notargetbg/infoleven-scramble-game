@@ -10,7 +10,7 @@ class Result extends Component {
 
 		return (
 			<Jumbotron>
-				{currentResult && 
+				{currentResult > 0 && 
 					<h3>Your result: <big>{currentResult}</big></h3>						
 				}
 				<ScoreModal shouldShow={shouldShowModal} result={currentResult} />

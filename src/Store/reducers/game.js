@@ -1,6 +1,6 @@
 const DEFAULT_STATE = {
 		answers: [],
-		currentResult: null,
+		currentResult: 0,
 		shouldStartGame: false,
 		hasGameStarted: false,
 		shouldShowModal: false
